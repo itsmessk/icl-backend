@@ -21,13 +21,15 @@ const __dirname = path.dirname(__filename);
 // Middleware
 app.use(cors({
   origin: [
-    'https://vta-client.vercel.app',
     'http://localhost:3000',  // For local development
     'http://localhost:5173',   // For Vite's default dev server port
     'https://infoziant.com',
     "https://www.infoziant.com", // AICL migrated to infoziant domain
-    'https://aicl.infoziant.com', // live usage
-    'https://vtaclient-production.up.railway.app' // railway default url
+    "https://api.icl.today",
+    "https://icl.today",
+    "https://www.icl.today",
+    "http://icl.today"
+     // railway default url
   ],
   credentials: true
 }));
