@@ -13,6 +13,24 @@ const options = {
         email: 'support@vta.com'
       }
     },
+    tags: [
+      {
+        name: 'Users',
+        description: 'User authentication and profile management'
+      },
+      {
+        name: 'Courses',
+        description: 'Course management and enrollment'
+      },
+      {
+        name: 'Payments',
+        description: 'Payment processing and history'
+      },
+      {
+        name: 'Course Inquiries',
+        description: 'Course inquiry management'
+      }
+    ],
     servers: [
       {
         url: 'http://localhost:5000',
