@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- meta tags -->
+    <meta charset="utf-8">
+    <meta name="keywords" content="bootstrap 5, premium, multipurpose, business, startup, agency, portfolio, rtl" />
+    <meta name="description" content="Startup Business Agency & Creative Portfolio Bootstrap5 Template" />
+    <meta name="author" content="www.themeht.com" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@12.0.0"></script>
+
+    <!-- Title -->
+    <title>SMI-Careers </title>
+
+    <!-- Favicon Icon -->
+    <link rel="shortcut icon" href="images/smi-icon.webp" />
+
+    <!-- inject css start -->
+
+    <!--== bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <!--== magnific-popup -->
+    <link href="css/magnific-popup.css" rel="stylesheet" type="text/css" />
+
+    <!--== line-awesome -->
+    <link href="css/line-awesome.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+
+    <!--== owl -->
+    <link href="css/owl.carousel.css" rel="stylesheet" type="text/css" />
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-thin-rounded/css/uicons-thin-rounded.css'>
+    <link rel='stylesheet'
+        href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-brands/css/uicons-brands.css'>
+    <link rel='stylesheet'
+        href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-straight/css/uicons-regular-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-brands/css/uicons-brands.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-thin-rounded/css/uicons-thin-rounded.css'>
+    <link rel='stylesheet'
+        href='https://cdn-uicons.flaticon.com/2.6.0/uicons-thin-straight/css/uicons-thin-straight.css'>
+    <link rel='stylesheet'
+        href='https://cdn-uicons.flaticon.com/2.6.0/uicons-thin-straight/css/uicons-thin-straight.css'>
+
+    <!--== odometer -->
+    <link href="css/odometer.css" rel="stylesheet" type="text/css" />
+
+    <!--== base -->
+    <link href="css/spacing.css" rel="stylesheet" type="text/css" />
+
+    <!--== base -->
+    <link href="css/base.css" rel="stylesheet" type="text/css" />
+
+    <!--== shortcodes -->
+    <link href="css/shortcodes.css" rel="stylesheet" type="text/css" />
+
+    <!--== theme-style -->
+    <link href="css/theme-style.css" rel="stylesheet" type="text/css" />
+
+    <link href="css/service.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css" />
+    <link href="css/careers.css" rel="stylesheet" type="text/css" />
+
+    <!-- inject css end -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .job-details-container {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    margin: 30px auto;
+    gap: 20px;
+}
+
+/* Job Content */
+.job-content {
+    flex: 2;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #1a1a1c;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.job-content p {
+    margin: 8px 0;
+}
+
+/* Sidebar */
+.job-sidebar {
+    flex: 1;
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.job-sidebar h3 {
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.job-sidebar p {
+    margin: 5px;
+    font-size: 16px;
+}
+
+/* Apply Button */
+.apply-btn {
+    background: linear-gradient(45deg, #edb106, #b20d0c);
+    color: white;
+    font-size: 16px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.apply-btn:hover {
+    background: linear-gradient(90deg, #edb106, #b20d0c);
+}
+
+/* PDF Export */
+.pdf-export {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: #151515;
+    cursor: pointer;
+}
+
+.pdf-export i {
+    font-size: 20px;
+}
+
+.fa-file-pdf {
+    margin-right: 10px;
+}
+
+/* Popup Modal */
+.popup-modal {
+    color: black;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+}
+
+/* Popup Content */
+.popup-content {
+    background-color: white;
+    margin: 5vh auto;
+    padding: 20px;
+    width: 50%;
+    max-height: 95vh;
+   
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    border-radius: 8px;
+}
+.popup-content form {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.popup-content h3 {
+    color: black;
+}
+
+/* Close Button */
+.popup-close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    cursor: pointer;
+    font-size: 22px;
+}
+
+/* Label Group */
+.popup-label-group {
+    margin-bottom: 15px;
+}
+
+/* Labels */
+.popup-label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Input Fields */
+.popup-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    white-space: normal;
+    word-wrap: break-word;
+    color: rgb(7, 7, 7);
+}
+
+/* Button Group */
+.popup-button-group {
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* Button */
+.popup-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #edb106, #b20d0c);
+    color: white;
+    cursor: pointer;
+}
+
+.popup-button:hover {
+    background: linear-gradient(45deg, #edb106, #b20d0c);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .job-details-container {
+        flex-direction: column;
+        gap: 15px;
+        width: 95%;
+    }
+
+    .job-content,
+    .job-sidebar {
+        padding: 15px;
+        font-size: 14px;
+    }
+
+    .apply-btn {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .popup-content {
+        width: 90%;
+        padding: 15px;
+        margin: 10vh auto;
+    }
+
+    .popup-input {
+        padding: 8px;
+    }
+
+    .popup-close {
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .popup-content {
+        width: 95%;
+        padding: 12px;
+        margin: 5vh auto;
+    }
+
+    .popup-label {
+        font-size: 14px;
+    }
+
+    .popup-input {
+        font-size: 14px;
+        padding: 8px;
+    }
+    
+
+    .popup-button {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+    </style>
+<style>
+    .hidden {
+        display: none;
+    }
+    .job-details-container1 {
+        display: none; /* Change this as per your layout */
+    }
+</style>
+</head>
+
+<body>
+
+    <!-- page wrapper start -->
+
+    <div class="page-wrapper">
+
+        <!-- preloader start -->
+
+        <div id="ht-preloader">
+            <div class="loader clear-loader">
+                <img class="img-fluid" src="images/smi-logo.webp" alt="Lodaer Img">
+            </div>
+        </div>
+
+        <!-- preloader end -->
+
+
+        <!--header start-->
+
+        <div id="header-placeholder"></div>
+
+
+        <div class="search-input" id="search-input-box">
+            <div class="search-inner-box">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6">
+                            <form role="search" id="search-form"
+                                class="search-form d-flex justify-content-between search-inner">
+                                <label>
+                                    <input type="search" class="search-field" placeholder="Search Here" value=""
+                                        name="s" />
+                                </label>
+                                <button type="submit" class="search-submit">
+                                    <i class="las la-search"></i>
+                                </button>
+                                <span class="las la-times close-search" id="close-search" title="Close Search"></span>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--header end-->
+
+
+        <!--hero section start-->
+
+        <!--hero section end-->
+        <!--body content start-->
+        <!-- Popup Modal -->
+        <div id="popupModal" class="popup-modal">
+            <div class="popup-content">
+                <span class="popup-close" onclick="closePopup()">&times;</span>
+                <h3>Apply for Job</h3>
+                <form id="jobApplicationForm" enctype="multipart/form-data">
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="applicantName">Full Name*</label>
+                        <input type="text" id="applicantName" name="applicantName" class="popup-input" maxlength="50" required style="color: #151515;">
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="currentDesignation">Current Designation*</label>
+                        <input type="text" id="currentDesignation" name="currentDesignation" class="popup-input" maxlength="50"style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="experience">Experience (in Years)*</label>
+                        <input type="text" id="experience" name="experience" class="popup-input" maxlength="30"style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="qualification">Qualification*</label>
+                        <input type="text" id="qualification" name="qualification" class="popup-input" maxlength="100" style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="currentCTC">Current CTC*</label>
+                        <input type="text" id="currentCTC" name="currentCTC" class="popup-input" maxlength="50" style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="expectedCTC">Expected CTC*</label>
+                        <input type="text" id="expectedCTC" name="expectedCTC" class="popup-input" maxlength="50" style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="keySkills">Key Skills (comma separated)*</label>
+                        <input type="text" id="keySkills" name="keySkills" class="popup-input" maxlength="1000"style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="languages">Languages (comma separated)*</label>
+                        <input type="text" id="languages" name="languages" class="popup-input" maxlength="100"style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="email">Your Email*</label>
+                        <input type="email" id="email" name="email" class="popup-input" maxlength="50" style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="phone">Phone*</label>
+                        <input type="tel" id="phone" name="phone" class="popup-input" maxlength="15"style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="dateOfBirth">Date of Birth*</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth" class="popup-input" style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="gender">Gender*</label>
+                        <select id="gender" name="gender" class="popup-input" style="color: #151515;" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="currentAddress">Current Address*</label>
+                        <input type="text" id="currentAddress" name="currentAddress" class="popup-input" maxlength="1000" style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="permanentAddress">Permanent Address*</label>
+                        <input type="text" id="permanentAddress" name="permanentAddress" maxlength="1000" class="popup-input" style="color: #151515;" required wrap="soft" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="zipCode">Zip Code*</label>
+                        <input type="text" id="zipCode" name="zipCode" maxlength="10" class="popup-input" style="color: #151515;" required>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="whyInterested">Why are you interested in SMI? (1000 words max)</label>
+                        <textarea id="whyInterested" name="whyInterested" class="popup-input" rows="4" maxlength="1000" style="color: #151515;" required wrap="soft"></textarea>
+                    </div>
+        
+                    <div class="popup-label-group">
+                        <label class="popup-label" for="resume">Upload Resume (PDF)*</label>
+                        <input type="file" id="resume" name="resume" class="popup-input" accept=".pdf" style="color: #151515;" required>
+                    </div>
+                    <span>Note:After click submit button Please wait few seconds for confirmation</span>
+                    <div class="popup-button-group">
+                        
+                        <button type="submit" class="popup-button">Submit Application</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="page-wrapper">
+
+            <!-- Header -->
+            <div id="header-placeholder"></div>
+            <div style="text-align: center;padding: 10%;" id="job-container1"></div>
+            <div class="job-details-container hidden" id="job-container">
+
+                <!-- Left Section: Job Content -->
+                <div class="job-content" id="jobDetails">
+                    <h2>Loading job details...</h2>
+                </div>
+
+                <!-- Right Section: Sidebar -->
+                <aside class="job-sidebar">
+                    <h3>Hiring organization</h3>
+                    <p id="jobCompany">Loading...</p>
+
+                    <h3>Employment Type</h3>
+                    <p id="jobtype">Loading....</p>
+
+                    <h3>Job Location</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> <span id="jobLocation">Loading...</span></p>
+
+                    <h3>Date posted</h3>
+                    <p><i class="fas fa-calendar-alt"></i> <span id="jobDate">Loading...</span></p>
+                    <h3>Application End Date</h3>
+                    <p><i class="fas fa-calendar-alt"></i> <span id="EndDate">Loading...Recruiter@smimiddleeast.com</span></p>
+                    <h3>For Contact</h3>
+                    <p><i class="fas fa-envelope"></i> <span>Recruiter@smimiddleeast.com</span></p>
+
+                    <button id="applyBtn" class="apply-btn">APPLY NOW</button>
+                </aside>
+
+            </div>
+
+            <!-- Job Details Section -->
+
+
+        </div>
+
+        <!--body content end-->
+
+        <!--footer end-->
+
+    </div>
+
+    <!-- page wrapper end -->
+
+
+    <!--back-to-top start-->
+
+    <div class="scroll-top"><a class="smoothscroll" href="#top"><i class="las la-arrow-up"></i></a></div>
+
+    <!--back-to-top end-->
+
+    <script>
+        document.getElementById("applyBtn").addEventListener("click", function () {
+            document.getElementById("popupModal").style.display = "block";
+        });
+
+        function closePopup() {
+            document.getElementById("popupModal").style.display = "none";
+        }
+
+    </script>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const jobId = urlParams.get("id");
+        let jobTitle = {};
+        const { Client, Databases,Storage,ID } = Appwrite;
+    
+        const client = new Client()
+            .setEndpoint("https://cloud.appwrite.io/v1")
+            .setProject("67b6ce100032bb22257f");
+    
+        const databases = new Databases(client);
+        const storage = new Storage(client);
+        const jobContainer1 = document.getElementById("job-container1"); 
+        const jobContainer = document.getElementById("job-container"); 
+        
+    
+        async function fetchJobDetails() {
+            if (!jobContainer1) {
+                console.error("Error: 'job-container' element not found.");
+                return;
+            }
+    
+            jobContainer1.innerHTML = "<p>Loading job details...</p>"; // Show loading indicator
+    
+            try {
+                // ✅ Fetch the job directly from Appwrite using jobId
+                const job = await databases.getDocument(
+                    "67b6d0580007f3db3feb",
+                    "67b6d0b30023f2b445b2",
+                    jobId
+                );
+    
+                if (!job) {
+                    jobContainer1.innerHTML = "<p>Job not found.</p>";
+                    return;
+                }
+                console.log(job);
+                jobTitle=job.jobTitle;
+                jobContainer.classList.remove("hidden");
+                jobContainer1.classList.add("job-details-container1");
+    
+                // ✅ Check if elements exist before modifying them
+                const jobDetails = document.getElementById("jobDetails");
+                const jobCompany = document.getElementById("jobCompany");
+                const jobLocation = document.getElementById("jobLocation");
+                const jobDate = document.getElementById("jobDate");
+                const jobEndDate = document.getElementById("EndDate");
+                const jobType = document.getElementById("jobtype");
+    
+                if (jobDetails) {
+                    jobDetails.innerHTML = `
+                        <h3>Role: ${job.jobTitle}</h3>
+                        <p><strong>Industry:</strong> ${job.industry || "N/A"}</p>
+                        <p><strong>Experience:</strong> ${job.qualifications || "N/A"}</p>
+                        <p><strong>Location:</strong> ${job.Location || "N/A"}</p>
+                        <p><strong>Mode:</strong> ${job.jobLocationType || "N/A"}</p>
+                        <p><strong>Skills:</strong> ${job.skills || "N/A"}</p>
+                        <p><strong>Salary:</strong> ${job.salaryRange || "N/A"}</p>
+                        <p><strong>Vacancy:</strong> ${job.Vacancy || "N/A"}</p>
+                        <p><strong>Status:</strong> ${job.status || "N/A"}</p>
+                        <h3>Job Description:</h3> 
+                        <p>${job.description || "N/A"}</p>
+                    `;
+                }
+                function formatDate(isoDate) {
+    if (!isoDate) return "Not Available"; // Handle missing dates
+    return new Date(isoDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    });
+}
+    
+                if (jobCompany) jobCompany.textContent = job.organizationName || "N/A";
+                if (jobLocation) jobLocation.textContent = job.Location || "N/A";
+                if (jobDate) jobDate.textContent = formatDate(job.datePosted) || "N/A";
+                if (jobEndDate) jobEndDate.textContent = formatDate(job.End_date) || "N/A";
+                if (jobType) jobType.textContent = job.employmentType || "N/A";
+    
+                console.log("Job details loaded:", job);
+            } catch (error) {
+                console.error("Error fetching job details:", error);
+                jobContainer1.innerHTML = "<p>Failed to load job details. Please try again later.</p>";
+            }
+        }
+    
+        fetchJobDetails();
+        
+        document.getElementById("jobApplicationForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        // Get form data
+        const formData = new FormData(event.target);
+        const fileInput = document.getElementById("resume").files[0];
+
+        if (!fileInput) {
+            alert("Please upload a resume.");
+            return;
+        }
+
+        try {
+            // Step 1: Upload resume to Appwrite Storage
+            const fileUpload = await storage.createFile("67b6de8800292a803597", ID.unique(), fileInput);
+            const fileId = fileUpload.$id;
+
+            // Step 2: Store application data in Appwrite Database
+            const response = await databases.createDocument(
+                "67b6d0580007f3db3feb",  // Replace with your Database ID
+                "67b856de0030782d732d", // Replace with your Collection ID
+                ID.unique(),
+                {
+                    jobId: jobId, // Example job ID, replace dynamically if needed
+                    jobtitle: jobTitle,    
+                    applicantName: formData.get("applicantName"),
+                    currentDesignation: formData.get("currentDesignation"),
+                    experience: formData.get("experience"),
+                    qualification: formData.get("qualification"),
+                    currentCTC: formData.get("currentCTC") || null,
+                    expectedCTC: formData.get("expectedCTC") || null,
+                    keySkills: formData.get("keySkills").split(",").map(skill => skill.trim()),
+                    languages: formData.get("languages").trim(),
+                    email: formData.get("email"),
+                    phone: formData.get("phone").toString(),
+                    dateOfBirth: formData.get("dateOfBirth"),
+                    gender: formData.get("gender"),
+                    currentAddress: formData.get("currentAddress"),
+                    permanentAddress: formData.get("permanentAddress"),
+                    zipCode: formData.get("zipCode"),
+                    whyInterested: formData.get("whyInterested"),
+                    resume: fileId, // Store Appwrite File ID
+                    appliedAt: new Date().toISOString(),
+                    status: "Pending"
+                }
+            );
+
+            alert("Application submitted successfully!");
+            event.target.reset(); // Reset form after submission
+            closePopup();
+        } catch (error) {
+            console.error("Error submitting application:", error);
+            alert("Failed to submit application.");
+        }
+    });
+
+
+    </script>
+    
+    
+
+   
+
+
+    <!--== jquery -->
+    <script src="js/jquery.min.js"></script>
+
+    <!--== bootstrap -->
+    <script src="js/bootstrap.bundle.min.js"></script>
+
+    <!--== jquery-appear -->
+    <script src="js/jquery-appear.js"></script>
+
+    <!--== owl -->
+    <script src="js/owl.carousel.min.js"></script>
+
+    <!--== magnific-popup -->
+    <script src="js/jquery.magnific-popup.min.js"></script>
+
+    <!--== counter -->
+    <script src="js/odometer.min.js"></script>
+
+    <!--== countdown -->
+    <script src="js/jquery.countdown.min.js"></script>
+
+    <!--== theme-script -->
+    <script src="js/theme-script.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('header-placeholder').innerHTML = html;
+                })
+                .catch(error => console.error('Error loading the header:', error));
+        });
+    </script>
+
+    <!-- inject js end -->
+    <script>
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(html => {
+                document.body.insertAdjacentHTML('beforeend', html);
+                initializeFooter();
+            })
+            .catch(error => console.error('Error loading the footer:', error));
+
+        function initializeFooter() {
+            // Collapsible Section Handling with Smooth Transition
+            document.querySelectorAll('.footer-section-title').forEach((title) => {
+                title.addEventListener('click', () => {
+                    const section = title.parentElement;
+                    const menu = section.querySelector('.footer-menu');
+                    const isOpen = section.classList.toggle('open');
+
+                    if (isOpen) {
+                        menu.style.maxHeight = menu.scrollHeight + 'px';
+                    } else {
+                        menu.style.maxHeight = '0';
+                    }
+                });
+            });
+
+            // Dynamic Current Year Update
+            document.addEventListener("DOMContentLoaded", () => {
+                const currentYear = new Date().getFullYear();
+                document.getElementById("currentYear").textContent = currentYear;
+            });
+        }
+    </script>
+
+</body>
+
+</html>
