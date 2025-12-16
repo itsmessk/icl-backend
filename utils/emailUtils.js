@@ -111,4 +111,94 @@ export const sendPasswordResetEmail = async (email, name, resetUrl) => {
   }
 };
 
-export default { sendVerificationEmail, sendPasswordResetEmail }; 
+// Send enrollment success email
+export const sendEnrollmentSuccessEmail = async (email, name, courseName, organization) => {
+  try {
+    const subject = `Enrollment Confirmation - ${courseName}`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
+        <div style="background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #10b981; margin: 0;">🎉 Enrollment Successful!</h1>
+          </div>
+          
+          <h2 style="color: #4a5568;">Hello ${name},</h2>
+          
+          <p style="font-size: 16px; line-height: 1.6; color: #4b5563;">
+            Congratulations! Your payment has been successfully processed and you are now enrolled in:
+          </p>
+          
+          <div style="background-color: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0;">
+            <h3 style="color: #1f2937; margin: 0 0 10px 0;">Course Details</h3>
+            <p style="margin: 5px 0; color: #4b5563;">
+              <strong>Course:</strong> ${courseName}
+            </p>
+            <p style="margin: 5px 0; color: #4b5563;">
+              <strong>Institution:</strong> ${organization}
+            </p>
+          </div>
+          
+          <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0; color: #065f46;">
+              <strong>✓ Payment Status:</strong> Completed
+            </p>
+            <p style="margin: 5px 0; color: #065f46;">
+              <strong>✓ Enrollment Status:</strong> Confirmed
+            </p>
+          </div>
+          
+          <h3 style="color: #4a5568; margin-top: 30px;">What's Next?</h3>
+          <ul style="color: #4b5563; line-height: 1.8;">
+            <li>Check your email for further instructions from our team</li>
+            <li>Prepare any required materials or prerequisites</li>
+            <li>Your classes details will be shared to you shortly</li>
+          </ul>
+          
+          <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0; color: #92400e;">
+              <strong>📧 Keep this email for your records</strong><br>
+              This serves as confirmation of your enrollment and payment.
+            </p>
+          </div>
+          
+          <p style="font-size: 16px; line-height: 1.6; color: #4b5563; margin-top: 30px;">
+            If you have any questions or concerns, please don't hesitate to contact our support team.
+          </p>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${process.env.CLIENT_URL || 'https://icl.today'}" 
+               style="background-color: #4a5568; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
+              Visit Dashboard
+            </a>
+          </div>
+          
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+          
+          <p style="color: #6b7280; font-size: 14px; line-height: 1.6;">
+            Thank you for choosing ICL! We're excited to have you as part of our learning community.
+          </p>
+          
+          <p style="color: #6b7280; font-size: 14px;">
+            Best regards,<br>
+            <strong>The ICL Team</strong>
+          </p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; color: #9ca3af; font-size: 12px;">
+          <p>This is an automated confirmation email. Please do not reply to this message.</p>
+        </div>
+      </div>
+    `;
+
+    return await sendEmail({
+      email,
+      subject,
+      html,
+    });
+  } catch (error) {
+    console.error('Enrollment email error:', error.message);
+    return { error: true, message: error.message };
+  }
+};
+
+export default { sendVerificationEmail, sendPasswordResetEmail, sendEnrollmentSuccessEmail }; 

@@ -6,7 +6,14 @@ import {
   verifyPaymentSimple,
   getInquiries,
   deleteEnquiry,
-  deleteitems
+  deleteitems,
+  getDashboardStats,
+  getFilteredInquiries,
+  getInquiryById,
+  updateInquiryStatus,
+  manuallyVerifyPayment,
+  updatePaymentStatus,
+  exportInquiries
 } from '../controllers/courseInquiryController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
@@ -155,5 +162,19 @@ router.post('/verify-payment-simple', verifyPaymentSimple);
  *         description: Admin access required
  */
 router.get('/', protect, getInquiries);
+
+// Dashboard Routes
+router.get('/dashboard/stats', protect, getDashboardStats);
+router.get('/export', protect, exportInquiries);
+
+// Filtered inquiries with pagination
+router.get('/filter', protect, getFilteredInquiries);
+
+// Single inquiry operations
+router.get('/:id', protect, getInquiryById);
+router.patch('/:id/status', protect, updateInquiryStatus);
+router.patch('/:id/payment-status', protect, updatePaymentStatus);
+router.patch('/:id/manual-verify', protect, manuallyVerifyPayment);
+router.delete('/:id', protect, deleteEnquiry);
 
 export default router; 
