@@ -201,19 +201,23 @@ export const verifyInquiryPayment = async (req, res) => {
       
       console.log(`Payment for inquiry ${inquiryId} verified successfully`);
       
+      // AUTOMATIC EMAIL DISABLED - Use batch email endpoint instead
       // Send enrollment success email
-      try {
-        await sendEnrollmentSuccessEmail(
-          inquiry.email,
-          inquiry.name,
-          inquiry.courseName,
-          inquiry.organization
-        );
-        console.log(`Enrollment email sent to ${inquiry.email}`);
-      } catch (emailError) {
-        console.error('Failed to send enrollment email:', emailError);
-        // Continue even if email fails
-      }
+      // try {
+      //   await sendEnrollmentSuccessEmail(
+      //     inquiry.email,
+      //     inquiry.name,
+      //     inquiry.courseName,
+      //     inquiry.organization
+      //   );
+      //   inquiry.enrollmentEmailSent = true;
+      //   inquiry.enrollmentEmailSentAt = new Date();
+      //   await inquiry.save();
+      //   console.log(`Enrollment email sent to ${inquiry.email}`);
+      // } catch (emailError) {
+      //   console.error('Failed to send enrollment email:', emailError);
+      //   // Continue even if email fails
+      // }
       
       res.status(200).json({ 
         success: true, 
@@ -311,19 +315,23 @@ export const verifyPaymentSimple = async (req, res) => {
         
         console.log(`Payment ${paymentId} for inquiry ${inquiryId} verified successfully`);
         
+        // AUTOMATIC EMAIL DISABLED - Use batch email endpoint instead
         // Send enrollment success email
-        try {
-          await sendEnrollmentSuccessEmail(
-            inquiry.email,
-            inquiry.name,
-            inquiry.courseName,
-            inquiry.organization
-          );
-          console.log(`Enrollment email sent to ${inquiry.email}`);
-        } catch (emailError) {
-          console.error('Failed to send enrollment email:', emailError);
-          // Continue even if email fails
-        }
+        // try {
+        //   await sendEnrollmentSuccessEmail(
+        //     inquiry.email,
+        //     inquiry.name,
+        //     inquiry.courseName,
+        //     inquiry.organization
+        //   );
+        //   inquiry.enrollmentEmailSent = true;
+        //   inquiry.enrollmentEmailSentAt = new Date();
+        //   await inquiry.save();
+        //   console.log(`Enrollment email sent to ${inquiry.email}`);
+        // } catch (emailError) {
+        //   console.error('Failed to send enrollment email:', emailError);
+        //   // Continue even if email fails
+        // }
         
         return res.status(200).json({ 
           success: true, 
@@ -367,19 +375,23 @@ export const verifyPaymentSimple = async (req, res) => {
         
         console.log(`Test mode: Payment ${paymentId} for inquiry ${inquiryId} marked as successful`);
         
+        // AUTOMATIC EMAIL DISABLED - Use batch email endpoint instead
         // Send enrollment success email
-        try {
-          await sendEnrollmentSuccessEmail(
-            inquiry.email,
-            inquiry.name,
-            inquiry.courseName,
-            inquiry.organization
-          );
-          console.log(`Enrollment email sent to ${inquiry.email}`);
-        } catch (emailError) {
-          console.error('Failed to send enrollment email:', emailError);
-          // Continue even if email fails
-        }
+        // try {
+        //   await sendEnrollmentSuccessEmail(
+        //     inquiry.email,
+        //     inquiry.name,
+        //     inquiry.courseName,
+        //     inquiry.organization
+        //   );
+        //   inquiry.enrollmentEmailSent = true;
+        //   inquiry.enrollmentEmailSentAt = new Date();
+        //   await inquiry.save();
+        //   console.log(`Enrollment email sent to ${inquiry.email}`);
+        // } catch (emailError) {
+        //   console.error('Failed to send enrollment email:', emailError);
+        //   // Continue even if email fails
+        // }
         
         return res.status(200).json({ 
           success: true, 
@@ -784,19 +796,23 @@ export const manuallyVerifyPayment = async (req, res) => {
     
     console.log(`Payment manually verified for inquiry ${inquiry._id} by admin`);
     
+    // AUTOMATIC EMAIL DISABLED - Use batch email endpoint instead
     // Send enrollment success email
-    try {
-      await sendEnrollmentSuccessEmail(
-        inquiry.email,
-        inquiry.name,
-        inquiry.courseName,
-        inquiry.organization
-      );
-      console.log(`Enrollment email sent to ${inquiry.email} after manual verification`);
-    } catch (emailError) {
-      console.error('Failed to send enrollment email:', emailError);
-      // Continue even if email fails
-    }
+    // try {
+    //   await sendEnrollmentSuccessEmail(
+    //     inquiry.email,
+    //     inquiry.name,
+    //     inquiry.courseName,
+    //     inquiry.organization
+    //   );
+    //   inquiry.enrollmentEmailSent = true;
+    //   inquiry.enrollmentEmailSentAt = new Date();
+    //   await inquiry.save();
+    //   console.log(`Enrollment email sent to ${inquiry.email} after manual verification`);
+    // } catch (emailError) {
+    //   console.error('Failed to send enrollment email:', emailError);
+    //   // Continue even if email fails
+    // }
     
     res.status(200).json({
       success: true,
@@ -904,6 +920,286 @@ export const exportInquiries = async (req, res) => {
     res.status(200).send(csv);
   } catch (error) {
     console.error('Error exporting inquiries:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// ============================================
+// BATCH EMAIL SYSTEM (LOCAL/OFFLINE ONLY)
+// ============================================
+
+// @desc    Get enrolled students who haven't received enrollment email
+// @route   GET /api/course-inquiries/emails/pending
+// @access  Private/Admin (LOCAL ONLY)
+export const getPendingEmails = async (req, res) => {
+  try {
+    // This endpoint only works in development/local environment
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(403).json({ 
+        message: 'Batch email features are only available in local/development environment' 
+      });
+    }
+
+    const { limit = 100, skip = 0 } = req.query;
+    
+    // Find all enrolled students with completed payment who haven't received email
+    const pendingEmails = await CourseInquiry.find({
+      status: 'enrolled',
+      paymentStatus: 'completed',
+      $or: [
+        { enrollmentEmailSent: false },
+        { enrollmentEmailSent: { $exists: false } }
+      ]
+    })
+    .select('name email courseName organization createdAt enrollmentEmailSent')
+    .sort({ createdAt: -1 })
+    .limit(parseInt(limit))
+    .skip(parseInt(skip));
+    
+    const totalPending = await CourseInquiry.countDocuments({
+      status: 'enrolled',
+      paymentStatus: 'completed',
+      $or: [
+        { enrollmentEmailSent: false },
+        { enrollmentEmailSent: { $exists: false } }
+      ]
+    });
+    
+    res.status(200).json({
+      success: true,
+      count: pendingEmails.length,
+      totalPending,
+      inquiries: pendingEmails
+    });
+  } catch (error) {
+    console.error('Error fetching pending emails:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// @desc    Send enrollment emails to specific students (batch)
+// @route   POST /api/course-inquiries/emails/send-batch
+// @access  Private/Admin (LOCAL ONLY)
+export const sendBatchEmails = async (req, res) => {
+  try {
+    // This endpoint only works in development/local environment
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(403).json({ 
+        message: 'Batch email features are only available in local/development environment' 
+      });
+    }
+
+    const { inquiryIds } = req.body;
+    
+    if (!inquiryIds || !Array.isArray(inquiryIds) || inquiryIds.length === 0) {
+      return res.status(400).json({ message: 'Please provide an array of inquiry IDs' });
+    }
+    
+    // Limit batch size to prevent overwhelming
+    if (inquiryIds.length > 100) {
+      return res.status(400).json({ message: 'Maximum 100 emails can be sent at once' });
+    }
+    
+    const results = {
+      total: inquiryIds.length,
+      sent: [],
+      failed: [],
+      alreadySent: []
+    };
+    
+    for (const inquiryId of inquiryIds) {
+      try {
+        const inquiry = await CourseInquiry.findById(inquiryId);
+        
+        if (!inquiry) {
+          results.failed.push({ id: inquiryId, reason: 'Inquiry not found' });
+          continue;
+        }
+        
+        // Check if email already sent
+        if (inquiry.enrollmentEmailSent) {
+          results.alreadySent.push({ 
+            id: inquiryId, 
+            email: inquiry.email,
+            sentAt: inquiry.enrollmentEmailSentAt 
+          });
+          continue;
+        }
+        
+        // Check if eligible for enrollment email
+        if (inquiry.status !== 'enrolled' || inquiry.paymentStatus !== 'completed') {
+          results.failed.push({ 
+            id: inquiryId, 
+            reason: `Not eligible (status: ${inquiry.status}, payment: ${inquiry.paymentStatus})` 
+          });
+          continue;
+        }
+        
+        // Send email
+        const emailResult = await sendEnrollmentSuccessEmail(
+          inquiry.email,
+          inquiry.name,
+          inquiry.courseName,
+          inquiry.organization
+        );
+        
+        if (emailResult && !emailResult.error) {
+          // Mark as sent
+          inquiry.enrollmentEmailSent = true;
+          inquiry.enrollmentEmailSentAt = new Date();
+          await inquiry.save();
+          
+          results.sent.push({ 
+            id: inquiryId, 
+            email: inquiry.email, 
+            name: inquiry.name,
+            course: inquiry.courseName
+          });
+          
+          console.log(`✅ Email sent to ${inquiry.email} (${inquiry.name})`);
+        } else {
+          results.failed.push({ 
+            id: inquiryId, 
+            email: inquiry.email,
+            reason: emailResult?.message || 'Unknown error' 
+          });
+        }
+        
+        // Add small delay between emails to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+      } catch (error) {
+        results.failed.push({ 
+          id: inquiryId, 
+          reason: error.message 
+        });
+        console.error(`❌ Failed to send email for inquiry ${inquiryId}:`, error.message);
+      }
+    }
+    
+    res.status(200).json({
+      success: true,
+      message: `Batch email complete: ${results.sent.length} sent, ${results.failed.length} failed, ${results.alreadySent.length} already sent`,
+      results
+    });
+  } catch (error) {
+    console.error('Error sending batch emails:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// @desc    Send enrollment emails to ALL eligible students
+// @route   POST /api/course-inquiries/emails/send-all
+// @access  Private/Admin (LOCAL ONLY)
+export const sendAllPendingEmails = async (req, res) => {
+  try {
+    // This endpoint only works in development/local environment
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(403).json({ 
+        message: 'Batch email features are only available in local/development environment' 
+      });
+    }
+
+    const { dryRun = false } = req.body;
+    
+    // Find all enrolled students who haven't received email
+    const pendingInquiries = await CourseInquiry.find({
+      status: 'enrolled',
+      paymentStatus: 'completed',
+      $or: [
+        { enrollmentEmailSent: false },
+        { enrollmentEmailSent: { $exists: false } }
+      ]
+    });
+    
+    if (dryRun) {
+      return res.status(200).json({
+        success: true,
+        dryRun: true,
+        message: `Dry run complete. ${pendingInquiries.length} emails would be sent.`,
+        totalToSend: pendingInquiries.length,
+        recipients: pendingInquiries.map(i => ({
+          id: i._id,
+          name: i.name,
+          email: i.email,
+          course: i.courseName
+        }))
+      });
+    }
+    
+    // Send emails
+    const inquiryIds = pendingInquiries.map(i => i._id.toString());
+    
+    // Reuse the batch email logic
+    return sendBatchEmails({
+      body: { inquiryIds }
+    }, res);
+    
+  } catch (error) {
+    console.error('Error sending all pending emails:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// @desc    Get email sending statistics
+// @route   GET /api/course-inquiries/emails/stats
+// @access  Private/Admin (LOCAL ONLY)
+export const getEmailStats = async (req, res) => {
+  try {
+    // This endpoint only works in development/local environment
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(403).json({ 
+        message: 'Batch email features are only available in local/development environment' 
+      });
+    }
+
+    const totalEnrolled = await CourseInquiry.countDocuments({
+      status: 'enrolled',
+      paymentStatus: 'completed'
+    });
+    
+    const emailsSent = await CourseInquiry.countDocuments({
+      enrollmentEmailSent: true
+    });
+    
+    const emailsPending = await CourseInquiry.countDocuments({
+      status: 'enrolled',
+      paymentStatus: 'completed',
+      $or: [
+        { enrollmentEmailSent: false },
+        { enrollmentEmailSent: { $exists: false } }
+      ]
+    });
+    
+    // Recent emails sent (last 7 days)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
+    const recentEmailsSent = await CourseInquiry.countDocuments({
+      enrollmentEmailSent: true,
+      enrollmentEmailSentAt: { $gte: sevenDaysAgo }
+    });
+    
+    // Get students enrolled before the email feature was added
+    const retroactiveEmails = await CourseInquiry.countDocuments({
+      status: 'enrolled',
+      paymentStatus: 'completed',
+      enrollmentEmailSent: { $exists: false }
+    });
+    
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalEnrolledStudents: totalEnrolled,
+        emailsSent,
+        emailsPending,
+        recentEmailsSent7Days: recentEmailsSent,
+        retroactiveEmails,
+        successRate: totalEnrolled > 0 ? ((emailsSent / totalEnrolled) * 100).toFixed(2) + '%' : '0%'
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching email stats:', error);
     res.status(500).json({ message: 'Server Error' });
   }
 };

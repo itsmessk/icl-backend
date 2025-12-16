@@ -13,7 +13,11 @@ import {
   updateInquiryStatus,
   manuallyVerifyPayment,
   updatePaymentStatus,
-  exportInquiries
+  exportInquiries,
+  getPendingEmails,
+  sendBatchEmails,
+  sendAllPendingEmails,
+  getEmailStats
 } from '../controllers/courseInquiryController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
@@ -176,5 +180,20 @@ router.patch('/:id/status', protect, updateInquiryStatus);
 router.patch('/:id/payment-status', protect, updatePaymentStatus);
 router.patch('/:id/manual-verify', protect, manuallyVerifyPayment);
 router.delete('/:id', protect, deleteEnquiry);
+
+// ============================================
+// BATCH EMAIL ROUTES (LOCAL/OFFLINE ONLY)
+// ============================================
+// Get students who need enrollment emails
+router.get('/emails/pending', protect, getPendingEmails);
+
+// Get email statistics and tracking
+router.get('/emails/stats', protect, getEmailStats);
+
+// Send emails to specific students (batch)
+router.post('/emails/send-batch', protect, sendBatchEmails);
+
+// Send emails to ALL eligible students
+router.post('/emails/send-all', protect, sendAllPendingEmails);
 
 export default router; 

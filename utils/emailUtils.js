@@ -5,28 +5,40 @@ dotenv.config();
 
 const sendEmail = async (options) => {
   try {
-    // In development mode, skip actual email sending and return mock success
-    if (process.env.NODE_ENV === 'development') {
-      console.log('DEV MODE: Email sending skipped');
+    // In PRODUCTION mode, block email sending completely
+    if (process.env.NODE_ENV === 'production') {
+      console.log('⛔ PRODUCTION MODE: Email sending blocked');
       console.log(`Would have sent email to: ${options.email}`);
       console.log(`Subject: ${options.subject}`);
       return {
-        messageId: 'mock-email-id-' + Date.now(),
-        mock: true,
+        messageId: 'blocked-production-' + Date.now(),
+        blocked: true,
         to: options.email,
-        success: true
+        success: true,
+        message: 'Email blocked in production - use local environment'
       };
     }
 
-    // Create transporter
+    // DEVELOPMENT MODE: Actually send emails
+    console.log('📧 DEVELOPMENT MODE: Sending email...');
+    
+    // Create transporter with connection timeout and retry logic
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: process.env.EMAIL_PORT || 587,
+      port: parseInt(process.env.EMAIL_PORT) || 587,
       secure: process.env.EMAIL_SECURE === 'true',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
       },
+      // Add timeouts and connection options for Railway/cloud platforms
+      connectionTimeout: 10000, // 10 seconds
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
+      // Disable TLS certificate validation if needed (not recommended for production)
+      tls: {
+        rejectUnauthorized: process.env.EMAIL_TLS_REJECT_UNAUTHORIZED !== 'false'
+      }
     });
 
     // Define email options
@@ -149,8 +161,7 @@ export const sendEnrollmentSuccessEmail = async (email, name, courseName, organi
           
           <h3 style="color: #4a5568; margin-top: 30px;">What's Next?</h3>
           <ul style="color: #4b5563; line-height: 1.8;">
-            <li>Check your email for further instructions from our team</li>
-            <li>Prepare any required materials or prerequisites</li>
+            <li>Check your email/WhatsApp for further instructions from our team</li>
             <li>Your classes details will be shared to you shortly</li>
           </ul>
           
@@ -165,11 +176,17 @@ export const sendEnrollmentSuccessEmail = async (email, name, courseName, organi
             If you have any questions or concerns, please don't hesitate to contact our support team.
           </p>
           
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${process.env.CLIENT_URL || 'https://icl.today'}" 
-               style="background-color: #4a5568; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
-              Visit Dashboard
-            </a>
+          <div style="background-color: #f3f4f6; padding: 20px; border-radius: 6px; margin: 25px 0;">
+            <h3 style="color: #1f2937; margin: 0 0 15px 0;">📞 Contact Support</h3>
+            <p style="margin: 8px 0; color: #4b5563;">
+              <strong>Email:</strong> <a href="mailto:support@icl.today" style="color: #2563eb; text-decoration: none;">Support@icl.today</a>
+            </p>
+            <p style="margin: 8px 0; color: #4b5563;">
+              <strong>Phone:</strong> <a href="tel:+918667214326" style="color: #2563eb; text-decoration: none;">+91 86672 14326</a>
+            </p>
+            <p style="margin: 8px 0; color: #4b5563;">
+              <strong>Phone:</strong> <a href="tel:+919176771711" style="color: #2563eb; text-decoration: none;">+91 91767 71711</a>
+            </p>
           </div>
           
           <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">

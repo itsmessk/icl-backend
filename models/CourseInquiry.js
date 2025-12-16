@@ -60,6 +60,14 @@ const courseInquirySchema = new mongoose.Schema({
   razorpayPaymentId: {
     type: String
   },
+  // Email tracking fields
+  enrollmentEmailSent: {
+    type: Boolean,
+    default: false
+  },
+  enrollmentEmailSentAt: {
+    type: Date
+  },
   createdAt: {
     type: Date,
     default: Date.now
